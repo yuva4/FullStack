@@ -1,35 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import Login from './Login';
-import Register from './Register';
+import React, { useState } from 'react';
+import Navbar from './Navbar';
 import Dashboard from './Dashboard';
+import Register from './Register';
+import Login from './Login';
+import AdminProblems from './AdminProblems';
 
 function App() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }, []);
-
-  if (isLoggedIn) {
-    return <Dashboard setIsLoggedIn={setIsLoggedIn} />;
-  }
+  const [page, setPage] = useState('dashboard');
 
   return (
     <div>
-      {isLogin ? <Login setIsLoggedIn={setIsLoggedIn} /> : <Register />}
-
-      <div className="flex justify-center mt-4">
-        <button
-          onClick={() => setIsLogin(!isLogin)}
-          className="text-blue-500 underline"
-        >
-          {isLogin ? "Don't have an account? Register here" : "Already have an account? Login here"}
-        </button>
-      </div>
+      <Navbar setPage={setPage} />
+      {page === 'dashboard' && <Dashboard />}
+      {page === 'register' && <Register />}
+      {page === 'login' && <Login />}
+      {page === 'admin' && <AdminProblems />}
     </div>
   );
 }
