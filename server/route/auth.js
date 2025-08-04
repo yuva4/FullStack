@@ -15,7 +15,8 @@ router.post("/register", async (req, res) => {
             firstName,
             lastName,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            role: "user" // default role
         });
         res.json(user);
     } catch (error) {
@@ -26,14 +27,24 @@ router.post("/register", async (req, res) => {
 // Login Route
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ error: "User not found" });
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(400).json({ error: "User not found" });
 
-    const valid = await bcrypt.compare(password, user.password);
-    if (!valid) return res.status(400).json({ error: "Invalid password" });
+        const valid = await bcrypt.compare(password, user.password);
+        if (!valid) return res.status(400).json({ error: "Invalid password" });
 
-    const token = jwt.sign({ id: user._id }, "secret_key");
-    res.json({ token });
+        const token = jwt.sign(
+            { id: user._id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+        );
+
+        res.json({ token, role: user.role });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
+    }
 });
 
 module.exports = router;

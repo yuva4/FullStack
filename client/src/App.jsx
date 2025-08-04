@@ -7,13 +7,14 @@ import AdminProblems from './AdminProblems';
 
 function App() {
   const [page, setPage] = useState('dashboard');
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // ✅ added
 
   return (
     <div>
       <Navbar setPage={setPage} />
       {page === 'dashboard' && <Dashboard />}
       {page === 'register' && <Register />}
-      {page === 'login' && <Login />}
+      {page === 'login' && <Login setIsLoggedIn={setIsLoggedIn} />} {/* ✅ updated */}
       {page === 'admin' && <AdminProblems />}
     </div>
   );

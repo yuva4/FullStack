@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-const Login = () => {
+
+
+const Login = ({ setIsLoggedIn }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -16,17 +20,19 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      const response = await axios.post(`${BACKEND_URL}/api/auth/login`, formData);
+
       console.log(response.data);
       setMessage('✅ Login Successful!');
-      localStorage.setItem('token', response.data.token);
-      setIsLoggedIn(true); // add this line
-    } catch (error) {
-      console.error(error);
-      setMessage('❌ Login Failed');
-    }
-};
+      Cookies.set('token', response.data.token, { expires: 7 }); // expires in 7 days
+      Cookies.set('role', response.data.role, { expires: 7 });
 
+      setIsLoggedIn(true); // ✅ will now work since passed from App.jsx
+    } catch (error) {
+      console.error(error.response ? error.response.data : error.message);
+      setMessage(`❌ Login Failed: ${error.response ? error.response.data.error : error.message}`);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

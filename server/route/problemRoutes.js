@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Problem = require("../models/problemModel");
+const isAdmin = require("../middleware/isAdmin");
 
-// CREATE
-router.post("/", async (req, res) => {
+// ✅ CREATE (Admin only)
+router.post("/", isAdmin, async (req, res) => {
     try {
         const newProblem = new Problem(req.body);
         await newProblem.save();
@@ -13,7 +14,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-// READ ALL
+//  READ ALL (Public)
 router.get("/", async (req, res) => {
     try {
         const problems = await Problem.find();
@@ -23,7 +24,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-// READ ONE
+// ✅ READ ONE (Public)
 router.get("/:id", async (req, res) => {
     try {
         const problem = await Problem.findById(req.params.id);
@@ -33,8 +34,8 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// UPDATE
-router.put("/:id", async (req, res) => {
+// ✅ UPDATE (Admin only)
+router.put("/:id", isAdmin, async (req, res) => {
     try {
         const updatedProblem = await Problem.findByIdAndUpdate(
             req.params.id,
@@ -47,8 +48,8 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-// DELETE
-router.delete("/:id", async (req, res) => {
+// ✅ DELETE (Admin only)
+router.delete("/:id", isAdmin, async (req, res) => {
     try {
         await Problem.findByIdAndDelete(req.params.id);
         res.json({ message: "Problem deleted successfully" });

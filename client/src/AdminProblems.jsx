@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 const AdminProblems = () => {
   const [problems, setProblems] = useState([]);
   const [formData, setFormData] = useState({
@@ -17,7 +19,8 @@ const AdminProblems = () => {
   // Fetch all problems
   const fetchProblems = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/problems");
+      const res = await axios.get(`${BACKEND_URL}/api/problems`);
+
       setProblems(res.data);
     } catch (error) {
       console.error("Error fetching problems:", error);
@@ -54,10 +57,12 @@ const AdminProblems = () => {
 
     try {
       if (editingId) {
-        await axios.put(`http://localhost:5000/api/problems/${editingId}`, problemData);
+        await axios.put(`${BACKEND_URL}/api/problems/${editingId}`, problemData);
+
         setEditingId(null);
       } else {
-        await axios.post("http://localhost:5000/api/problems", problemData);
+        await axios.post(`${BACKEND_URL}/api/problems`, problemData);
+
       }
 
       // Reset form and refresh problems
@@ -97,7 +102,8 @@ const AdminProblems = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this problem?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/problems/${id}`);
+        await axios.delete(`${BACKEND_URL}/api/problems/${id}`);
+
         fetchProblems();
       } catch (error) {
         console.error("Error deleting problem:", error);
