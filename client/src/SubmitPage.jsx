@@ -23,7 +23,7 @@ const SubmitPage = () => {
     axios
       .get(`${BACKEND_URL}/api/problems/${id}`)
       .then((res) => setProblem(res.data))
-      .catch((err) => console.error("⚠️ Error loading problem:", err));
+      .catch((err) => console.error(" Error loading problem:", err));
   }, [id]);
 
   // ✅ Run
@@ -35,9 +35,9 @@ const SubmitPage = () => {
         language,
         input: problem?.sampleInput || "",
       });
-      setOutput(res.data.output || res.data.error || "⚠️ No output");
+      setOutput(res.data.output || res.data.error || " No output");
     } catch (err) {
-      console.error("⚠️ Run error:", err);
+      console.error(" Run error:", err);
       setOutput("Error running code.");
     }
     setLoading(false);
@@ -49,7 +49,7 @@ const SubmitPage = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        setOutput("⚠️ You must be logged in to submit.");
+        setOutput(" You must be logged in to submit.");
         setLoading(false);
         return;
       }
@@ -63,7 +63,7 @@ const SubmitPage = () => {
       setResults(res.data.results || []);
       setOutput(`Verdict: ${res.data.verdict}`);
     } catch (err) {
-      console.error("⚠️ Submit error:", err);
+      console.error(" Submit error:", err);
       setOutput(
         `Error submitting code: ${
           err.response?.data?.error || err.message || "Unknown error"
@@ -81,8 +81,8 @@ const SubmitPage = () => {
       const res = await axios.post(`${BACKEND_URL}/api/ai-review`, { code });
       setReview(res.data.review);
     } catch (err) {
-      console.error("⚠️ AI review failed:", err);
-      setReview("⚠️ Failed to fetch review");
+      console.error(" AI review failed:", err);
+      setReview(" Failed to fetch review");
     }
     setReviewLoading(false);
   };
@@ -138,7 +138,7 @@ const SubmitPage = () => {
               className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold px-6 py-2 rounded-lg shadow-md hover:scale-105 transition"
               disabled={loading}
             >
-              {loading ? "Running..." : "▶️ Run"}
+              {loading ? "Running..." : "▶ Run"}
             </button>
 
             <button
@@ -146,7 +146,7 @@ const SubmitPage = () => {
               className="bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md hover:scale-105 transition"
               disabled={loading}
             >
-              {loading ? "Submitting..." : "✅ Submit"}
+              {loading ? "Submitting..." : " Submit"}
             </button>
 
             <button
@@ -173,7 +173,7 @@ const SubmitPage = () => {
               <ul className="list-disc ml-6">
                 {results.map((res, i) => (
                   <li key={i}>
-                    Testcase {i + 1}: {res.passed ? "✅ Passed" : "❌ Failed"}
+                    Testcase {i + 1}: {res.passed ? " Passed" : " Failed"}
                   </li>
                 ))}
               </ul>

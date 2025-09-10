@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Problem = require("../models/problemModel");
+const Problem = require("../models/ProblemModel");
 const isAdmin = require("../middleware/isAdmin"); // Make sure this is working
 
 // CREATE (Admin only)

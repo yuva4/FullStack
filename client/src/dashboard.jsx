@@ -7,7 +7,7 @@ const Dashboard = () => {
       {/* Hero Section */}
       <section className="flex flex-col items-center justify-center text-center flex-grow px-6 py-16">
         <h1 className="text-6xl md:text-7xl font-extrabold text-[#8FB3E2] mb-6 tracking-wide">
-          Code Quest ⚔️
+          Code Quest 
         </h1>
         <p className="text-lg md:text-2xl max-w-3xl text-[#D9E1F1] leading-relaxed mb-10">
           Embark on your coding adventure! Solve algorithmic challenges, test
@@ -20,19 +20,19 @@ const Dashboard = () => {
     to="/login"
     className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition transform hover:scale-110 w-56 text-center shadow-lg"
   >
-    🔑 Login
+     Login
   </Link>
   <Link
     to="/register"
     className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition transform hover:scale-110 w-56 text-center shadow-lg"
   >
-    📝 Register
+     Register
   </Link>
   <Link
     to="/problems"
     className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition transform hover:scale-110 w-56 text-center shadow-lg"
   >
-  🚀 Explore Problems
+   Explore Problems
 </Link>
 
 

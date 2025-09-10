@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./server
+    container_name: algou-backend-container
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./server/.env
+    depends_on:
+      - compiler
+
+  compiler:
+    build: ./compiler server
+    container_name: algou-compiler-container
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./compiler server/.env

@@ -29,7 +29,7 @@ const AdminProblems = () => {
       setProblems(res.data);
     } catch (error) {
       console.error("Error fetching problems:", error);
-      alert("❌ Failed to fetch problems. Check backend connection.");
+      alert(" Failed to fetch problems. Check backend connection.");
     } finally {
       setLoading(false);
     }
@@ -51,7 +51,7 @@ const AdminProblems = () => {
       parsedTestcases = JSON.parse(formData.testcases || "[]");
       if (!Array.isArray(parsedTestcases)) throw new Error();
     } catch {
-      alert("❌ Invalid JSON format in testcases. Please enter a valid JSON array.");
+      alert(" Invalid JSON format in testcases. Please enter a valid JSON array.");
       return;
     }
 
@@ -67,12 +67,12 @@ const AdminProblems = () => {
         await axios.put(`${BACKEND_URL}/api/problems/${editingId}`, problemData, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        alert("✅ Problem updated successfully.");
+        alert(" Problem updated successfully.");
       } else {
         await axios.post(`${BACKEND_URL}/api/problems`, problemData, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        alert("✅ Problem added successfully.");
+        alert(" Problem added successfully.");
       }
 
       setFormData({
@@ -88,7 +88,7 @@ const AdminProblems = () => {
       fetchProblems();
     } catch (error) {
       console.error("Error submitting problem:", error);
-      alert("❌ Failed to submit problem. Check backend logs.");
+      alert(" Failed to submit problem. Check backend logs.");
     } finally {
       setLoading(false);
     }
@@ -115,11 +115,11 @@ const AdminProblems = () => {
         await axios.delete(`${BACKEND_URL}/api/problems/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        alert("✅ Problem deleted successfully.");
+        alert(" Problem deleted successfully.");
         fetchProblems();
       } catch (error) {
         console.error("Error deleting problem:", error);
-        alert("❌ Failed to delete problem. Check backend connection.");
+        alert(" Failed to delete problem. Check backend connection.");
       } finally {
         setLoading(false);
       }
@@ -244,13 +244,13 @@ const AdminProblems = () => {
                 onClick={() => handleEdit(problem)}
                 className="bg-yellow-500 text-black font-semibold px-3 py-1 rounded hover:bg-yellow-600"
               >
-                ✏️ Edit
+                 Edit
               </button>
               <button
                 onClick={() => handleDelete(problem._id)}
                 className="bg-red-600 text-white font-semibold px-3 py-1 rounded hover:bg-red-700"
               >
-                🗑 Delete
+                 Delete
               </button>
             </div>
           </div>

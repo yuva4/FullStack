@@ -9,32 +9,36 @@ const TEMP_DIR = path.join(__dirname, "temp");
 // Ensure temp dir exists
 if (!fs.existsSync(TEMP_DIR)) fs.mkdirSync(TEMP_DIR, { recursive: true });
 
-/**
- * Execute code for multiple languages.
- * - language: "cpp" | "c" | "python" | "java"
- * - code: source code string
- * - input: string to send to stdin
- * - timeoutMs: maximum ms for execution (default 5000)
- */
+// 🔹 Normalizer function (removes extra spaces/newlines)
+const normalizeOutput = (str) => str.trim().replace(/\r\n/g, "\n");
+
 const executeCode = (language, code, input = "", timeoutMs = 5000) => {
   return new Promise((resolve, reject) => {
     const id = uuid();
     let srcPath, exePath, compileCmd, runCmdInfo;
 
+    const isWin = process.platform === "win32";
+
     try {
       if (language === "cpp") {
         srcPath = path.join(TEMP_DIR, `${id}.cpp`);
-        exePath = path.join(TEMP_DIR, `${id}.exe`);
+        exePath = path.join(TEMP_DIR, isWin ? `${id}.exe` : id);
         fs.writeFileSync(srcPath, code, "utf8");
         compileCmd = `g++ "${srcPath}" -o "${exePath}"`;
-        runCmdInfo = { runPath: exePath, args: [] };
+        runCmdInfo = {
+          runPath: isWin ? exePath : `./${path.basename(exePath)}`,
+          args: [],
+        };
 
       } else if (language === "c") {
         srcPath = path.join(TEMP_DIR, `${id}.c`);
-        exePath = path.join(TEMP_DIR, `${id}.exe`);
+        exePath = path.join(TEMP_DIR, isWin ? `${id}.exe` : id);
         fs.writeFileSync(srcPath, code, "utf8");
         compileCmd = `gcc "${srcPath}" -o "${exePath}"`;
-        runCmdInfo = { runPath: exePath, args: [] };
+        runCmdInfo = {
+          runPath: isWin ? exePath : `./${path.basename(exePath)}`,
+          args: [],
+        };
 
       } else if (language === "python") {
         srcPath = path.join(TEMP_DIR, `${id}.py`);
@@ -42,15 +46,14 @@ const executeCode = (language, code, input = "", timeoutMs = 5000) => {
         runCmdInfo = { runPath: "python", args: [srcPath] };
 
       } else if (language === "java") {
-        // NOTE: requires user's class name to be `Main`
-        const className = "Main";
+        const className = "Main"; // NOTE: requires user's class name to be `Main`
         srcPath = path.join(TEMP_DIR, `${className}.java`);
         fs.writeFileSync(srcPath, code, "utf8");
         compileCmd = `javac "${srcPath}" -d "${TEMP_DIR}"`;
         runCmdInfo = { runPath: "java", args: ["-cp", TEMP_DIR, className] };
 
       } else {
-        return reject("❌ Language not supported");
+        return reject("Language not supported");
       }
     } catch (fsErr) {
       return reject("Filesystem error: " + fsErr.message);
@@ -75,6 +78,7 @@ const executeCode = (language, code, input = "", timeoutMs = 5000) => {
       const child = spawn(runCmdInfo.runPath, runCmdInfo.args, {
         cwd: TEMP_DIR,
         stdio: ["pipe", "pipe", "pipe"],
+        shell: !isWin, // important: use shell for ./binary on Linux
       });
 
       let stdout = "";
@@ -87,7 +91,7 @@ const executeCode = (language, code, input = "", timeoutMs = 5000) => {
           child.kill("SIGKILL");
           finished = true;
           cleanup();
-          return reject("⏳ Execution timed out");
+          return reject("Execution timed out");
         }
       }, timeoutMs);
 
@@ -110,7 +114,7 @@ const executeCode = (language, code, input = "", timeoutMs = 5000) => {
         if (stderr && stderr.trim().length > 0) {
           return reject(stderr.trim());
         }
-        return resolve(stdout.trim());
+        return resolve(normalizeOutput(stdout));
       });
 
       if (input != null && input !== "") {

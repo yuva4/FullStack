@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -11,11 +12,14 @@ const Login = ({ setIsLoggedIn }) => {
   });
 
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
+  // ✅ handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // ✅ handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -24,16 +28,18 @@ const Login = ({ setIsLoggedIn }) => {
         formData
       );
 
-      console.log(response.data);
-      setMessage("✅ Login Successful!");
-
+      // ✅ Save token and role
       Cookies.set("token", response.data.token, { expires: 7 });
       Cookies.set("role", response.data.role, { expires: 7 });
 
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", response.data.role);
 
+      setMessage("✅ Login Successful!");
       setIsLoggedIn(true);
+
+      // ✅ Redirect to problems page
+      navigate("/problems");
     } catch (error) {
       console.error(error.response ? error.response.data : error.message);
       setMessage(
@@ -52,7 +58,7 @@ const Login = ({ setIsLoggedIn }) => {
       >
         {/* Heading */}
         <h2 className="text-3xl font-extrabold mb-6 text-center text-[#192338] drop-shadow">
-          🔑 Code Quest Login
+          Code Quest Login
         </h2>
 
         {/* Email Input */}
@@ -82,7 +88,7 @@ const Login = ({ setIsLoggedIn }) => {
           type="submit"
           className="bg-gradient-to-r from-[#8FB3E2] to-[#D9E1F1] text-[#192338] px-4 py-3 rounded-lg w-full font-semibold shadow-md hover:opacity-90 hover:scale-105 transition-transform"
         >
-          🚀 Login
+          Login
         </button>
 
         {/* Message */}

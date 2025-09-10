@@ -1,3 +1,4 @@
+// routes/judgeRoutes.js
 const express = require("express");
 const axios = require("axios");
 const Problem = require("../models/ProblemModel");
@@ -6,10 +7,20 @@ const isAuth = require("../middleware/isAuth");
 
 const router = express.Router();
 
+// 🔹 Strong output normalizer
+const normalize = (s) =>
+  s
+    ? s
+        .toString()
+        .replace(/\r/g, "") // remove CR (Windows newlines)
+        .trim() // remove leading/trailing spaces & newlines
+        .split(/\s+/) // split by ANY whitespace (spaces, tabs, newlines)
+        .join(" ") // rejoin into single-space separated string
+    : "";
+
 /**
  * POST /api/judge/:problemId
  * body: { code: string, language: string }
- * Runs code against all testcases, saves submission (with AI review), and returns results.
  */
 router.post("/:problemId", isAuth, async (req, res) => {
   try {
@@ -34,17 +45,16 @@ router.post("/:problemId", isAuth, async (req, res) => {
 
     for (const [index, tc] of problem.testcases.entries()) {
       try {
-        const runRes = await axios.post(
-          "http://localhost:8000/run",
-          { code, language, input: tc.input },
-          { timeout: 15000 } // 15s timeout
+        const runRes = await axios.post("http://compiler:8000/run", {
+
+          code, language, input: tc.input },
+          { timeout: 15000 }
         );
 
         const rawOut = (
           runRes.data.output ?? runRes.data.error ?? ""
         ).toString();
 
-        const normalize = (s) => (s ? s.replace(/\r/g, "").trim() : "");
         const got = normalize(rawOut);
         const expected = normalize(tc.output);
 
@@ -62,7 +72,7 @@ router.post("/:problemId", isAuth, async (req, res) => {
         results.push({
           testcase: index + 1,
           input: tc.input,
-          expected: tc.output || "",
+          expected: normalize(tc.output || ""),
           got: "RUNTIME/COMPILATION ERROR",
           passed: false,
         });
@@ -73,7 +83,7 @@ router.post("/:problemId", isAuth, async (req, res) => {
     const verdict =
       passed === problem.testcases.length ? "✅ Accepted" : "❌ Wrong Answer";
 
-    // 4. Call AI review service
+    // 4. AI review (safe fallback if service down)
     let aiReview = "";
     try {
       const aiRes = await axios.post("http://localhost:5000/api/ai-review", {
@@ -85,7 +95,7 @@ router.post("/:problemId", isAuth, async (req, res) => {
       aiReview = "⚠️ AI review unavailable at the moment.";
     }
 
-    // 5. Save submission to DB
+    // 5. Save submission
     const submission = await Submission.create({
       problemId,
       userId: req.user.id,
@@ -93,10 +103,10 @@ router.post("/:problemId", isAuth, async (req, res) => {
       language,
       verdict,
       results,
-      aiReview, // ✅ store AI review
+      aiReview,
     });
 
-    // 6. Return response
+    // 6. Respond
     return res.json({
       problemId,
       total: problem.testcases.length,
@@ -104,7 +114,7 @@ router.post("/:problemId", isAuth, async (req, res) => {
       verdict,
       results,
       submissionId: submission._id,
-      aiReview, // ✅ send back to client too
+      aiReview,
     });
   } catch (err) {
     console.error("❌ Judge route error:", err);
@@ -117,7 +127,6 @@ router.post("/:problemId", isAuth, async (req, res) => {
 
 /**
  * GET /api/judge/submissions
- * Returns all submissions (with problem title populated)
  */
 router.get("/submissions", isAuth, async (req, res) => {
   try {

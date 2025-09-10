@@ -18,7 +18,7 @@ const Navbar = () => {
       <div className="flex justify-between items-center">
         {/* Website Title */}
         <h1 className="text-2xl font-extrabold text-[#8FB3E2] tracking-wide">
-          Code Quest ⚔️
+          Code Quest 
         </h1>
 
         {/* Links */}

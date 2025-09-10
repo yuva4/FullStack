@@ -37,12 +37,12 @@ int main() {
   // ✅ Run button
   const handleRun = async () => {
     if (!problem) {
-      setOutput("⚠️ Problem not loaded");
+      setOutput(" Problem not loaded");
       return;
     }
 
     setLoading(true);
-    setOutput("⏳ Running...");
+    setOutput(" Running...");
 
     try {
       const res = await axios.post(`${JUDGE_URL}/run`, {
@@ -56,7 +56,7 @@ int main() {
           res.data.results
             .map(
               (r, i) =>
-                `Testcase ${i + 1}: ${r.passed ? "✅ Passed" : "❌ Failed"}\n` +
+                `Testcase ${i + 1}: ${r.passed ? " Passed" : " Failed"}\n` +
                 `Input: ${r.input}\nExpected: ${r.expectedOutput}\nGot: ${
                   r.output || r.error
                 }\n`
@@ -64,10 +64,10 @@ int main() {
             .join("\n")
         );
       } else {
-        setOutput("❌ Error: " + res.data.error);
+        setOutput(" Error: " + res.data.error);
       }
     } catch (err) {
-      setOutput("⚠️ Failed to connect: " + err.message);
+      setOutput(" Failed to connect: " + err.message);
     }
 
     setLoading(false);
@@ -76,12 +76,12 @@ int main() {
   // ✅ Submit button (save to DB)
 const handleSubmit = async () => {
   if (!problem) {
-    setOutput("⚠️ Problem not loaded");
+    setOutput(" Problem not loaded");
     return;
   }
 
   setLoading(true);
-  setOutput("⏳ Submitting...");
+  setOutput(" Submitting...");
 
   try {
     // 1️⃣ Run code first against testcases
@@ -92,7 +92,7 @@ const handleSubmit = async () => {
     });
 
     if (!runRes.data.success) {
-      setOutput("❌ Error: " + runRes.data.error);
+      setOutput(" Error: " + runRes.data.error);
       setLoading(false);
       return;
     }
@@ -113,12 +113,12 @@ const handleSubmit = async () => {
     });
 
     if (saveRes.data.success) {
-      setOutput("✅ Submission saved!\nVerdict: " + verdict);
+      setOutput(" Submission saved!\nVerdict: " + verdict);
     } else {
-      setOutput("⚠️ Error saving submission: " + saveRes.data.error);
+      setOutput(" Error saving submission: " + saveRes.data.error);
     }
   } catch (err) {
-    setOutput("⚠️ Failed: " + err.message);
+    setOutput(" Failed: " + err.message);
   }
 
   setLoading(false);

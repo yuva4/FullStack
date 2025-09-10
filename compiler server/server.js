@@ -10,7 +10,7 @@ app.use(cors());
 app.use(bodyParser.json({ limit: "5mb" }));
 
 app.get("/", (req, res) => {
-  res.json({ success: true, message: "✅ Compiler server is alive!" });
+  res.json({ success: true, message: " Compiler server is alive!" });
 });
 
 app.post("/run", async (req, res) => {
@@ -19,7 +19,7 @@ app.post("/run", async (req, res) => {
   if (!language || !code) {
     return res.status(400).json({
       success: false,
-      error: "⚠️ Language and code are required",
+      error: " Language and code are required",
     });
   }
 
@@ -33,5 +33,5 @@ app.post("/run", async (req, res) => {
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log(`⚙️ Compiler server running at http://localhost:${PORT}`);
+  console.log(` Compiler server running at http://localhost:${PORT}`);
 });

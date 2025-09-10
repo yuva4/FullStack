@@ -16,7 +16,7 @@ export default function SubmissionPage() {
       try {
         const token = localStorage.getItem("token"); // ✅ get token
         if (!token) {
-          console.warn("⚠️ No token found, redirecting to login...");
+          console.warn(" No token found, redirecting to login...");
           navigate("/login"); // ✅ send to login if not logged in
           return;
         }
@@ -46,14 +46,14 @@ export default function SubmissionPage() {
       <div className="bg-[#D9E1F1]/95 backdrop-blur-md shadow-2xl rounded-2xl p-8 w-full max-w-5xl">
         {/* Heading */}
         <h1 className="text-3xl font-extrabold mb-6 text-center text-[#192338] drop-shadow">
-          📜 My Submissions
+           My Submissions
         </h1>
 
         {/* Loading / Error / Empty */}
         {loading ? (
-          <p className="text-center text-[#192338]">⏳ Loading submissions...</p>
+          <p className="text-center text-[#192338]"> Loading submissions...</p>
         ) : error ? (
-          <p className="text-center text-red-600 font-semibold">❌ {error}</p>
+          <p className="text-center text-red-600 font-semibold"> {error}</p>
         ) : submissions.length === 0 ? (
           <p className="text-center text-[#192338]">No submissions yet.</p>
         ) : (

@@ -25,10 +25,10 @@ const Register = () => {
       );
 
       console.log(response.data);
-      setMessage("✅ Registration Successful!");
+      setMessage(" Registration Successful!");
     } catch (error) {
       console.error(error);
-      setMessage("❌ Registration Failed");
+      setMessage(" Registration Failed");
     }
   };
 
@@ -92,7 +92,7 @@ const Register = () => {
           type="submit"
           className="bg-gradient-to-r from-[#8FB3E2] to-[#D9E1F1] text-[#192338] px-4 py-3 rounded-lg w-full font-semibold shadow-md hover:opacity-90 hover:scale-105 transition-transform"
         >
-          🚀 Register
+           Register
         </button>
 
         {/* Message */}

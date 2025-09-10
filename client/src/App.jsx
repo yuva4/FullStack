@@ -8,6 +8,7 @@ import AdminProblems from "./AdminProblems";
 import SubmitPage from "./SubmitPage";
 import SubmissionPage from "./SubmissionPage";
 import ProblemsPage from "./ProblemsPage"; // ✅ new page
+import PrivateRoute from "./PrivateRoute";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -17,13 +18,39 @@ function App() {
       <Navbar />
 
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<Dashboard />} />
-        <Route path="/problems" element={<ProblemsPage />} /> {/* ✅ new */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+
+        {/* Protected routes */}
+        <Route
+          path="/problems"
+          element={
+            <PrivateRoute>
+              <ProblemsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/submit/:id"
+          element={
+            <PrivateRoute>
+              <SubmitPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/submissions"
+          element={
+            <PrivateRoute>
+              <SubmissionPage />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Admin route (protect this too if you want) */}
         <Route path="/admin" element={<AdminProblems />} />
-        <Route path="/submit/:id" element={<SubmitPage />} />
-        <Route path="/submissions" element={<SubmissionPage />} />
       </Routes>
     </Router>
   );
