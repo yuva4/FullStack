@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./Navbar.jsx";
-import Dashboard from "./Dashboard";
-import Register from "./Register";
-import Login from "./Login";
+import Dashboard from "./dashboard";
+import Register from "./register";
+import Login from "./login";
 import AdminProblems from "./AdminProblems";
 import SubmitPage from "./SubmitPage";
 import SubmissionPage from "./SubmissionPage";
