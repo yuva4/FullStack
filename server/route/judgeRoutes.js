@@ -45,9 +45,13 @@ router.post("/:problemId", isAuth, async (req, res) => {
 
     for (const [index, tc] of problem.testcases.entries()) {
       try {
-        const runRes = await axios.post("http://compiler:8000/run", {
-
-          code, language, input: tc.input },
+        const runRes = await axios.post(
+          `${process.env.COMPILER_URL}/run`,
+          {
+            code,
+            language,
+            input: tc.input,
+          },
           { timeout: 15000 }
         );
 
@@ -86,10 +90,14 @@ router.post("/:problemId", isAuth, async (req, res) => {
     // 4. AI review (safe fallback if service down)
     let aiReview = "";
     try {
-      const aiRes = await axios.post("http://localhost:5000/api/ai-review", {
-        code,
-      });
-      aiReview = aiRes.data.review;
+      if (process.env.AI_URL) {
+        const aiRes = await axios.post(`${process.env.AI_URL}/api/ai-review`, {
+          code,
+        });
+        aiReview = aiRes.data.review;
+      } else {
+        aiReview = "⚠️ AI review unavailable (no AI_URL set).";
+      }
     } catch (err) {
       console.error("⚠️ AI review failed:", err.message);
       aiReview = "⚠️ AI review unavailable at the moment.";
