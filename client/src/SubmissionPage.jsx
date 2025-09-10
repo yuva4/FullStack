@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
-const BACKEND_URL = "http://localhost:5000"; // ✅ backend port
+const BACKEND_URL = "https://code-quest-r6vt.onrender.com"; // ✅ backend port
 
 export default function SubmissionPage() {
   const [submissions, setSubmissions] = useState([]);

@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-const BACKEND_URL = "http://localhost:5000"; // ✅ Your main backend (problems + submissions)
-const JUDGE_URL = "http://localhost:8000";   // ✅ Your compiler server
+const BACKEND_URL = "https://code-quest-r6vt.onrender.com"; // main backend (problems + submissions)
+const JUDGE_URL = "https://compiler-uth7.onrender.com";      // ✅ Your compiler server
 
 export default function Compiler() {
   const { problemId } = useParams(); // ✅ get problemId from URL

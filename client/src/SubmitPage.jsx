@@ -3,7 +3,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 
-const BACKEND_URL = "http://localhost:5000"; // centralize backend URL
+// ✅ Deployed backend + compiler URLs
+const BACKEND_URL = "https://code-quest-r6vt.onrender.com";
+const COMPILER_URL = "https://compiler-uth7.onrender.com";
 
 const SubmitPage = () => {
   const { id } = useParams();
@@ -30,7 +32,7 @@ const SubmitPage = () => {
   const handleRun = async () => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:8000/run", {
+      const res = await axios.post(`${COMPILER_URL}/run`, {
         code,
         language,
         input: problem?.sampleInput || "",

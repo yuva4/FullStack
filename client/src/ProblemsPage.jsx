@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-const BACKEND_URL = "http://localhost:5000";
+const BACKEND_URL = "https://code-quest-r6vt.onrender.com";
 
 export default function ProblemsPage() {
   const [problems, setProblems] = useState([]);
